@@ -6,12 +6,12 @@
 # 
 # by Stephan Raabe (2023)
 # -----------------------------------------------------
-# ~/.bashrc
+# ~/.zshrc
 # -----------------------------------------------------
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
-PS1='[\u@\h \W]\$ '
+PS1='[%n@%m %1~]%# '
 
 # Define Editor
 export EDITOR=nvim
@@ -38,7 +38,7 @@ alias winclass="xprop | grep 'CLASS'"
 alias dot="cd ~/dotfiles"
 alias cleanup='~/dotfiles/scripts/cleanup.sh'
 alias install='sudo pacman -S'
-
+alias lg='lazygit'
 # -----------------------------------------------------
 # ML4W Apps
 # -----------------------------------------------------
@@ -120,7 +120,7 @@ alias dotsync="~/dotfiles-versions/dotfiles/.dev/sync.sh dotfiles"
 # -----------------------------------------------------
 # START STARSHIP
 # -----------------------------------------------------
-eval "$(starship init bash)"
+eval "$(starship init zsh)"
 
 # -----------------------------------------------------
 # PYWAL
@@ -131,7 +131,7 @@ cat ~/.cache/wal/sequences
 # PLUGINS
 # -----------------------------------------------------
 # Initialize Zoxide
-eval "$(zoxide init bash)"
+eval "$(zoxide init zsh)"
 
 # -----------------------------------------------------
 # Fastfetch if on wm
@@ -151,3 +151,10 @@ fi
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# -----------------------------------------------------
+# ZSH-CUSTOM-PLUGINS
+# -----------------------------------------------------
+ source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
