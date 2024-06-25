@@ -5,6 +5,9 @@ size = 12.0
 family = "JetBrains Mono"
 style = "Regular"
 
+[window]
+opacity = 0.5
+
 [window.padding]
 x = 15
 y = 15

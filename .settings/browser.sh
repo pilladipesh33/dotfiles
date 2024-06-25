@@ -1,1 +1,1 @@
-firefox-developer-edition
+sidekick-browser-stable

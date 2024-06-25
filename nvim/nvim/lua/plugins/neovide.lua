@@ -11,7 +11,7 @@ return {
         -- configure font
         guifont = "JetBrainsMono Nerd Font:h12",
         -- line spacing
-        linespace = 0,
+        linespace = 1.2,
       },
       g = { -- configure vim.g variables
         -- configure scaling
