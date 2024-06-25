@@ -37,7 +37,7 @@ alias rw='~/dotfiles/waybar/reload.sh'
 alias winclass="xprop | grep 'CLASS'"
 alias dot="cd ~/dotfiles"
 alias cleanup='~/dotfiles/scripts/cleanup.sh'
-alias install='sudo yay -S'
+alias install='yay -S'
 alias lg='lazygit'
 # -----------------------------------------------------
 # ML4W Apps
