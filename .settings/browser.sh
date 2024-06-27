@@ -1,1 +1,1 @@
-sidekick-browser-stable
+vivaldi 
