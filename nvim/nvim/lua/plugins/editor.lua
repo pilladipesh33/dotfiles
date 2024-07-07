@@ -12,35 +12,37 @@ return {
       {
         "<leader>fP",
         function()
-          require("telescope.builtin").find_files {
+          require("telescope.builtin").find_files({
             cwd = require("lazy.core.config").options.root,
-          }
+          })
         end,
         desc = "Find Plugin File",
       },
       {
         ";f",
         function()
-          local builtin = require "telescope.builtin"
-          builtin.find_files {
+          local builtin = require("telescope.builtin")
+          builtin.find_files({
             no_ignore = false,
             hidden = true,
-          }
+          })
         end,
         desc = "Lists files in your current working directory, respects .gitignore",
       },
       {
         ";r",
         function()
-          local builtin = require "telescope.builtin"
-          builtin.live_grep()
+          local builtin = require("telescope.builtin")
+          builtin.live_grep({
+            additional_args = { "--hidden" },
+          })
         end,
         desc = "Search for a string in your current working directory and get results live as you type, respects .gitignore",
       },
       {
         "\\\\",
         function()
-          local builtin = require "telescope.builtin"
+          local builtin = require("telescope.builtin")
           builtin.buffers()
         end,
         desc = "Lists open buffers",
@@ -48,7 +50,7 @@ return {
       {
         ";t",
         function()
-          local builtin = require "telescope.builtin"
+          local builtin = require("telescope.builtin")
           builtin.help_tags()
         end,
         desc = "Lists available help tags and opens a new window with the relevant help info on <cr>",
@@ -56,7 +58,7 @@ return {
       {
         ";;",
         function()
-          local builtin = require "telescope.builtin"
+          local builtin = require("telescope.builtin")
           builtin.resume()
         end,
         desc = "Resume the previous telescope picker",
@@ -64,7 +66,7 @@ return {
       {
         ";e",
         function()
-          local builtin = require "telescope.builtin"
+          local builtin = require("telescope.builtin")
           builtin.diagnostics()
         end,
         desc = "Lists Diagnostics for all open buffers or a specific buffer",
@@ -72,7 +74,7 @@ return {
       {
         ";s",
         function()
-          local builtin = require "telescope.builtin"
+          local builtin = require("telescope.builtin")
           builtin.treesitter()
         end,
         desc = "Lists Function names, variables, from Treesitter",
@@ -80,11 +82,13 @@ return {
       {
         "sf",
         function()
-          local telescope = require "telescope"
+          local telescope = require("telescope")
 
-          local function telescope_buffer_dir() return vim.fn.expand "%:p:h" end
+          local function telescope_buffer_dir()
+            return vim.fn.expand("%:p:h")
+          end
 
-          telescope.extensions.file_browser.file_browser {
+          telescope.extensions.file_browser.file_browser({
             path = "%:p:h",
             cwd = telescope_buffer_dir(),
             respect_gitignore = false,
@@ -93,14 +97,14 @@ return {
             previewer = false,
             initial_mode = "normal",
             layout_config = { height = 40 },
-          }
+          })
         end,
         desc = "Open File Browser with the path of the current buffer",
       },
     },
     config = function(_, opts)
-      local telescope = require "telescope"
-      local actions = require "telescope.actions"
+      local telescope = require("telescope")
+      local actions = require("telescope.actions")
       local fb_actions = require("telescope").extensions.file_browser.actions
 
       opts.defaults = vim.tbl_deep_extend("force", opts.defaults, {
@@ -133,7 +137,9 @@ return {
               -- your custom normal mode mappings
               ["N"] = fb_actions.create,
               ["h"] = fb_actions.goto_parent_dir,
-              ["/"] = function() vim.cmd "startinsert" end,
+              ["/"] = function()
+                vim.cmd("startinsert")
+              end,
               ["<C-u>"] = function(prompt_bufnr)
                 for i = 1, 10 do
                   actions.move_selection_previous(prompt_bufnr)
@@ -151,8 +157,65 @@ return {
         },
       }
       telescope.setup(opts)
-      require("telescope").load_extension "fzf"
-      require("telescope").load_extension "file_browser"
+      require("telescope").load_extension("fzf")
+      require("telescope").load_extension("file_browser")
     end,
+  },
+  {
+    "lewis6991/gitsigns.nvim",
+    event = "LazyFile",
+    opts = {
+      signs = {
+        add = { text = "▎" },
+        change = { text = "▎" },
+        delete = { text = "" },
+        topdelete = { text = "" },
+        changedelete = { text = "▎" },
+        untracked = { text = "▎" },
+      },
+      signs_staged = {
+        add = { text = "▎" },
+        change = { text = "▎" },
+        delete = { text = "" },
+        topdelete = { text = "" },
+        changedelete = { text = "▎" },
+      },
+      on_attach = function(buffer)
+        local gs = package.loaded.gitsigns
+
+        local function map(mode, l, r, desc)
+          vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc })
+        end
+
+      -- stylua: ignore start
+      map("n", "]h", function()
+        if vim.wo.diff then
+          vim.cmd.normal({ "]c", bang = true })
+        else
+          gs.nav_hunk("next")
+        end
+      end, "Next Hunk")
+      map("n", "[h", function()
+        if vim.wo.diff then
+          vim.cmd.normal({ "[c", bang = true })
+        else
+          gs.nav_hunk("prev")
+        end
+      end, "Prev Hunk")
+      map("n", "]H", function() gs.nav_hunk("last") end, "Last Hunk")
+      map("n", "[H", function() gs.nav_hunk("first") end, "First Hunk")
+      map({ "n", "v" }, "<leader>ghs", ":Gitsigns stage_hunk<CR>", "Stage Hunk")
+      map({ "n", "v" }, "<leader>ghr", ":Gitsigns reset_hunk<CR>", "Reset Hunk")
+      map("n", "<leader>ghS", gs.stage_buffer, "Stage Buffer")
+      map("n", "<leader>ghu", gs.undo_stage_hunk, "Undo Stage Hunk")
+      map("n", "<leader>ghR", gs.reset_buffer, "Reset Buffer")
+      map("n", "<leader>ghp", gs.preview_hunk_inline, "Preview Hunk Inline")
+      map("n", "<leader>ghb", function() gs.blame_line({ full = true }) end, "Blame Line")
+      map("n", "<leader>ghB", function() gs.blame() end, "Blame Buffer")
+      map("n", "<leader>ghd", gs.diffthis, "Diff This")
+      map("n", "<leader>ghD", function() gs.diffthis("~") end, "Diff This ~")
+      map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "GitSigns Select Hunk")
+      end,
+    },
   },
 }
