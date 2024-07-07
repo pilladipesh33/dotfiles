@@ -1,3 +1,9 @@
+local function match_at_cursor(pattern)
+  local col = vim.api.nvim_win_get_cursor(0)[2]
+  local text = vim.api.nvim_get_current_line():sub(col, col - 1 + pattern:len())
+  return text == pattern
+end
+
 return {
   "hrsh7th/nvim-cmp",
   event = "InsertEnter",
@@ -41,7 +47,15 @@ return {
         ["<C-f>"] = cmp.mapping.scroll_docs(4),
         ["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
         ["<C-e>"] = cmp.mapping.abort(), -- close completion window
-        ["<CR>"] = cmp.mapping.confirm({ select = false }),
+        ["<CR>"] = cmp.mapping(function(fallback)
+          if not cmp.confirm({ select = false }) then
+            fallback()
+            if match_at_cursor("></") then
+              local keys = vim.api.nvim_replace_termcodes("<c-o>O", true, true, true)
+              vim.api.nvim_feedkeys(keys, "n", false)
+            end
+          end
+        end),
       }),
       -- sources for autocompletion
       sources = cmp.config.sources({
