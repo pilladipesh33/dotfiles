@@ -15,6 +15,9 @@ PS1='[%n@%m %1~]%# '
 
 # Define Editor
 export EDITOR=nvim
+export TERM=xterm-256color
+export COLORTERM="truecolor"
+alias tmux="tmux -2"
 
 # -----------------------------------------------------
 # ALIASES
@@ -89,7 +92,7 @@ alias lg='~/dotfiles/scripts/looking-glass.sh'
 # -----------------------------------------------------
 alias confq='$EDITOR ~/dotfiles/qtile/config.py'
 alias confp='$EDITOR ~/dotfiles/picom/picom.conf'
-alias confb='$EDITOR ~/dotfiles/.bashrc'
+alias confz='$EDITOR ~/dotfiles/.zshrc'
 
 # -----------------------------------------------------
 # EDIT NOTES

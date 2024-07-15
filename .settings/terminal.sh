@@ -1,1 +1,1 @@
-warp-terminal
+alacritty
